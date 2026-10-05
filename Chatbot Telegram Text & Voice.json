@@ -1,0 +1,403 @@
+{
+  "name": "Chatbot Telegram Text & Voice",
+  "nodes": [
+    {
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {}
+      },
+      "id": "7c9c8827-510d-415a-872f-c02cb46ba42d",
+      "name": "Telegram Trigger",
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.5,
+      "position": [
+        -352,
+        -32
+      ],
+      "webhookId": "65a6bfd6-b10c-4389-83ec-5ef70207d49b",
+      "credentials": {
+        "telegramApi": {
+          "id": "Bk36uurIwSiUK21j",
+          "name": "chatbot telegram text & voice"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "00c5794d-c468-40aa-b1fd-f3682baec0c8",
+              "leftValue": "={{ $json.message.text }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "exists",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "97b5dcdf-f60e-4e0d-8664-a85589401c53",
+      "name": "If input",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        -128,
+        -32
+      ]
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.message?.text ?? $json.text }}",
+        "options": {
+          "systemMessage": "=System Role\n\nYou are a Multilingual AI Real Estate Sales Agent for a real estate company.\n\nYour job is to communicate with customers, answer their real estate questions, understand their requirements, evaluate their level of interest, and transfer qualified leads to the sales team.\n\nLanguage Support\n\n- Support the customer's language automatically.\n- Detect the language used by the customer.\n- Always reply in the same language used by the customer.\n- Support Arabic, English, French, Spanish, German, and other languages when possible.\n- If the customer changes language during the conversation, switch to the new language automatically.\n- Do not translate the customer's message unless they ask you to.\n- Keep the same professional and friendly tone regardless of the language.\n\nCustomer Conversation\n\n- Be friendly, professional, and helpful.\n- Answer the customer's question directly and clearly.\n- Do not ask questions that the customer has already answered.\n- Remember information provided earlier in the conversation.\n- Do not ask for contact information at the beginning of the conversation without a clear reason.\n- Do not pressure the customer to buy.\n- Keep the conversation natural and concise.\n\nUnderstanding Customer Requirements\n\nDuring the conversation, identify relevant information such as:\n\n- Property type\n- Location or project\n- Number of bedrooms\n- Property size\n- Budget\n- Payment method\n- Purpose of purchase\n- Preferred project or property\n- Other requirements or preferences\n\nDo not turn the conversation into a long questionnaire. Collect information naturally as the conversation progresses.\n\nProperty Questions\n\nAnswer questions using only the available property information and connected tools.\n\nThe customer may ask about:\n\n- Property prices\n- Property sizes\n- Number of bedrooms\n- Project locations\n- Payment plans\n- Down payments\n- Installments\n- Facilities and amenities\n- Available properties\n- Project details\n\nNever invent property information.\n\nIf you do not have confirmed information about something, clearly tell the customer that the information is currently unavailable.\n\nCustomer Interest Evaluation\n\nWhen the customer appears to have finished asking questions or the conversation naturally reaches a conclusion, evaluate their level of interest.\n\nClassify the customer as:\n\n- High Interest\n- Medium Interest\n- Low Interest\n\nConsider the following signals:\n\n- Asking about purchasing steps\n- Asking about booking\n- Requesting to speak with sales\n- Asking for a viewing or meeting\n- Providing a clear budget\n- Providing specific property requirements\n- Showing interest in a specific property or project\n- Asking questions that indicate purchase intent\n\nDo not classify a customer as highly interested based on a single weak signal.\n\nHigh-Interest Customer\n\nIf the customer is clearly High Interest, naturally offer to connect them with the sales team.\n\nExample:\n\n\"Based on your requirements, our sales team can provide you with more details and help you find the right property. Would you like me to collect a few details so the sales team can contact you?\"\n\nDo not request contact information before there is a clear reason to do so.\n\nLead Information Collection\n\nIf the customer agrees to be contacted, collect only the necessary information:\n\n- Full name\n- Phone number\n- Email address\n- Property or project of interest\n- Budget\n- Location\n- Requirements\n- Preferred contact time, if provided\n\nIf the customer has already provided any of this information, do not ask for it again.\n\nData Validation\n\nAfter receiving the customer's information:\n\n- Make sure the name is clear.\n- Check that the phone number appears valid.\n- Check that the email address has a valid format.\n- If information is missing, ask only for the missing information.\n- Do not repeatedly ask for information that has already been provided.\n\nSales Team Email\n\nAfter collecting the required information, prepare a structured lead summary containing:\n\nLead Information\n\n- Name:\n- Phone:\n- Email:\n- Property/Project:\n- Budget:\n- Location:\n- Requirements:\n- Interest Level:\n- Interest Reason:\n- Conversation Summary:\n- Preferred Contact Time:\n\nSend this information to the sales team using the available email tool.\n\nCustomer Confirmation\n\nAfter the lead information has been successfully sent to the sales team, tell the customer:\n\n\"Your information has been received successfully and forwarded to our sales team. They will contact you to assist you with the next steps. Thank you for contacting us.\"\n\nReply in the customer's language.\n\nIf the email fails to send, do not tell the customer that the information was successfully forwarded.\n\nImportant Rules\n\n- Never invent prices, properties, availability, payment plans, offers, or schedules.\n- Never claim that a property is available unless confirmed by the available data or tools.\n- Never fabricate customer information.\n- Never ask the same question twice.\n- Never pressure the customer to purchase.\n- Do not collect unnecessary personal information.\n- Respect the customer's privacy.\n- Keep responses concise, natural, and professional.\n- Your primary goal is to help the customer, qualify genuine leads, and connect qualified customers with the sales team."
+        }
+      },
+      "id": "921627ad-e8a9-424a-b4a7-3312eb640e41",
+      "name": "AI Agent",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        576,
+        -256
+      ]
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-5-mini"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "id": "cb7877e3-1755-4ae3-909e-154634604408",
+      "name": "OpenAI Chat Model",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        544,
+        -32
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": null,
+          "name": "",
+          "__aiGatewayManaged": true
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "contextWindowLength": 50
+      },
+      "id": "dc2e4395-3770-4830-b2ee-891079d8ac61",
+      "name": "Simple Memory",
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.4,
+      "position": [
+        704,
+        -32
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "51a9f58a-96af-4464-a415-dafbb990a1f6",
+              "leftValue": "={{ $('Telegram Trigger').item.json.message.text }}",
+              "rightValue": "={{ $json.output }}",
+              "operator": {
+                "type": "string",
+                "operation": "exists",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "ee56d057-742b-4cbd-b571-26be1dea975f",
+      "name": "If output",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        944,
+        -320
+      ]
+    },
+    {
+      "parameters": {
+        "chatId": "8212443428",
+        "text": "={{ $json.output }}",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "id": "1b169d80-58bc-4a1f-b66e-a6b49f98449c",
+      "name": "Send a text message",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1296,
+        -448
+      ],
+      "webhookId": "ff005e8f-3aae-45be-848f-9c6a57212920",
+      "credentials": {
+        "telegramApi": {
+          "id": "Bk36uurIwSiUK21j",
+          "name": "chatbot telegram text & voice"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "audio",
+        "model": "tts-1-hd",
+        "input": "={{ $json.output }}",
+        "voice": "echo",
+        "options": {
+          "response_format": "opus"
+        }
+      },
+      "id": "4b1b575c-4d20-449f-af34-216a75720bcc",
+      "name": "Generate audio",
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 2.3,
+      "position": [
+        1120,
+        -208
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": null,
+          "name": "",
+          "__aiGatewayManaged": true
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "sendAudio",
+        "chatId": "8212443428",
+        "binaryData": true,
+        "additionalFields": {}
+      },
+      "id": "3ed222ab-dc7f-40fa-9278-15be5c8e894c",
+      "name": "Send an audio file",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1344,
+        -208
+      ],
+      "webhookId": "2c8e9506-984f-4b4b-858d-1ed3f756b780",
+      "credentials": {
+        "telegramApi": {
+          "id": "Bk36uurIwSiUK21j",
+          "name": "chatbot telegram text & voice"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "file",
+        "fileId": "={{ $json.message.voice.file_id }}",
+        "additionalFields": {}
+      },
+      "id": "7a11d41d-77f9-4abd-82dd-afc94303dd1c",
+      "name": "Get a file",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        16,
+        80
+      ],
+      "webhookId": "649dbfee-6aea-4e4a-b5a0-7e96616be6ea",
+      "credentials": {
+        "telegramApi": {
+          "id": "Bk36uurIwSiUK21j",
+          "name": "chatbot telegram text & voice"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "audio",
+        "operation": "transcribe",
+        "options": {}
+      },
+      "id": "974e67c9-7a12-47c2-818b-7d064eb5c256",
+      "name": "Transcribe a recording",
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 2.3,
+      "position": [
+        240,
+        80
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": null,
+          "name": "",
+          "__aiGatewayManaged": true
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "If input",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If input": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Get a file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "If output",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If output": {
+      "main": [
+        [
+          {
+            "node": "Send a text message",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Generate audio",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate audio": {
+      "main": [
+        [
+          {
+            "node": "Send an audio file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get a file": {
+      "main": [
+        [
+          {
+            "node": "Transcribe a recording",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Transcribe a recording": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "timeSavedMode": "fixed",
+    "callerPolicy": "workflowsFromSameOwner",
+    "availableInMCP": false
+  },
+  "versionId": "5dfa43d5-c31e-4be5-9e35-17a42e4c1a15",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "c0194f2c83dfbba3b011f7588c5581868b50f7991773ab107dc36d4afb6f93c8"
+  },
+  "nodeGroups": [],
+  "id": "I7UCbtNYpVwH61FO",
+  "tags": []
+}
